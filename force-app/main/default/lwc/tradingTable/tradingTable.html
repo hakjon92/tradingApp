@@ -1,0 +1,116 @@
+<template>
+      <div class="slds-clearfix">
+          <div class="slds-float_right slds-m-top_small" > 
+              <lightning-button variant="brand-outline" label="New Trade" title="Primary action with lighter look" onclick={displayModal}></lightning-button>
+          </div>
+      </div>
+        <div style="height: 300px;" class="slds-m-top_small">
+          <lightning-datatable key-field="id"  data={data}  hide-checkbox-column columns={columns} > </lightning-datatable>
+        </div>
+        <template if:true={isOpenModal}>
+          <!-- Modal/Popup Box LWC starts here -->
+          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+              <div class="slds-modal__container">
+                  <!-- Modal/Popup Box LWC header here -->
+                  <header class="slds-modal__header">
+                      <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                          <lightning-icon icon-name="utility:close" alternative-text="close"  variant="inverse"  size="small" ></lightning-icon>
+                          <span class="slds-assistive-text">Close</span>
+                      </button>
+                      <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Modal/PopUp Box header LWC</h2>
+                  </header>
+                  <!-- Modal/Popup Box LWC body starts here -->
+                  <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <!--lightning-record-edit-form was a better and standard solution -->
+                    <!--<lightning-record-edit-form object-api-name="Trade__c">-->
+                      <div class="slds-form_horizontal slds-form slds-grid slds-wrap">
+                        <!--format per slds grid -->
+                        <div class="slds-size_1-of-3 slds-form_horizontal slds-form slds-grid slds-wrap " id="labelSellCurr">
+                          <div class="slds-size_2-of-5">
+                          </div>
+                          <div class="slds-size_2-of-5">
+                          <lightning-formatted-text value="Sell Currency" ></lightning-formatted-text>
+                          </div>
+                          <div class="slds-size_1-of-5">
+                          </div>
+                        </div>
+                        <div class="slds-size_1-of-3 slds-form_horizontal slds-form slds-grid slds-wrap " id="labelRate">
+                          <div class="slds-size_2-of-5">
+                          </div>
+                          <div class="slds-size_2-of-5">
+                          <lightning-formatted-text value="Rate" ></lightning-formatted-text>
+                          </div>
+                          <div class="slds-size_1-of-5">
+                          </div>
+                        </div>
+                        <div class="slds-size_1-of-3 slds-form_horizontal slds-form slds-grid slds-wrap " id="labelBuyCurr">
+                          <div class="slds-size_2-of-5">
+                          </div>
+                          <div class="slds-size_2-of-5">
+                          <lightning-formatted-text value="Buy Currency" ></lightning-formatted-text>
+                          </div>
+                          <div class="slds-size_1-of-5">
+                          </div>
+                        </div>
+                        <div class="slds-size_1-of-3" id="sellCurrBox">
+                        <lightning-combobox data-id="sellCurr" value={valueSellCurr} placeholder="" options={options} onchange={handleChangesSell}></lightning-combobox>
+                        </div>
+                        <div class="slds-size_1-of-3 slds-form_horizontal slds-form slds-grid slds-wrap " id="rateBox">
+                          <div class="slds-size_1-of-8">
+                          </div>
+                          <div class="slds-size_1-of-8">
+                            <lightning-icon icon-name="utility:right"></lightning-icon>
+                          </div>
+                          <div class="slds-size_1-of-8">
+                          </div>
+                          <div class="slds-size_2-of-8" style="padding-top: 5px">
+                            <lightning-formatted-number value={rateValue}  minimum-significant-digits="5"></lightning-formatted-number>
+                          </div>
+                          <div class="slds-size_1-of-8">
+                          </div>
+                          <div class="slds-size_1-of-8">
+                            <lightning-icon icon-name="utility:right"></lightning-icon>
+                          </div>
+                          <div class="slds-size_1-of-8">
+                          </div>
+                        </div>
+                        <div class="slds-size_1-of-3" id="buyCurrBox">
+                          <lightning-combobox data-id="buyCurr" value={valueBuyCurr} placeholder="" options={options} onchange={handleChangesBuy}></lightning-combobox>
+                        </div>
+                        <div class="slds-size_1-of-3 slds-form_horizontal slds-form slds-grid slds-wrap " id="labelSellAmo">
+                          <div class="slds-size_2-of-5">
+                          </div>
+                          <div class="slds-size_2-of-5">
+                          <lightning-formatted-text value="Sell Amount" ></lightning-formatted-text>
+                          </div>
+                          <div class="slds-size_1-of-5">
+                          </div>
+                        </div>
+                        <div class="slds-size_1-of-3 slds-form_horizontal slds-form slds-grid slds-wrap ">
+                        </div>
+                        <div class="slds-size_1-of-3 slds-form_horizontal slds-form slds-grid slds-wrap " id="labelBuyAmo">
+                          <div class="slds-size_2-of-5">
+                          </div>
+                          <div class="slds-size_2-of-5">
+                          <lightning-formatted-text value="Buy Amount" ></lightning-formatted-text>
+                          </div>
+                          <div class="slds-size_1-of-5">
+                          </div>
+                        </div>
+                        <lightning-input data-id="sellAmount" class="slds-size_1-of-3" type="number" name="sellAm" step="0.01" onchange={calculateBuyAmount}></lightning-input>
+                        <!--<lightning-input-field class="slds-size_1-of-3"> </lightning-input-field>-->
+                        <div class="slds-size_1-of-3"></div>
+                        <lightning-input data-id="butAmount" value={buyAmount} class="slds-size_1-of-3" type="number" name="buyAm" step="0.01" disabled="true" ></lightning-input>
+                      </div>
+                    <!--</lightning-record-edit-form>-->
+                  </div>
+                  <!-- Modal/Popup Box LWC footer starts here -->
+                  <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral slds-float_left" onclick={createRecord} title="Create">Create</button>
+                    <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                  </footer>
+              </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+</template>

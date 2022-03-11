@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Post_To_Chatter</name>
+        <label>Post_To_Chatter</label>
+        <locationX>176</locationX>
+        <locationY>335</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>ChatterMex</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <stringValue>0F97Q0000004jiVSAQ</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>54.0</apiVersion>
+    <interviewLabel>Chatter post after Trade insert {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Chatter post after Trade insert</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Post_To_Chatter</targetReference>
+        </connector>
+        <object>Trade__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>ChatterMex</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>A new trade has been created with the following data:
+
+Sell Currency: {!$Record.Sell_Currency__c}
+Sell Amount: {!$Record.Sell_Amount__c}
+Buy Currency: {!$Record.Buy_Currency__c}
+Buy Amount: {!$Record.Buy_Amount_Form__c}
+Rate: {!$Record.Rate__c}
+Booked Date: {!$Record.Date_Booked__c}</text>
+    </textTemplates>
+</Flow>
